@@ -1,7 +1,18 @@
+const tsImportPluginFactory = require('ts-import-plugin');
+
 module.exports = async ({ config, mode }) => {
   config.module.rules.push({
     test: /\.(ts|tsx)$/,
     loader: 'ts-loader',
+    options: {
+      getCustomTransformers: () => ({
+        before: [tsImportPluginFactory({
+          libraryName: 'antd',
+          libraryDirectory: 'es',
+          style: true
+        })]
+      }),
+    },
   });
 
   config.resolve.extensions.push('.ts', '.tsx');
@@ -15,6 +26,11 @@ module.exports = async ({ config, mode }) => {
       plugins: [
         ["@babel/plugin-proposal-decorators", { legacy: true }],
         ['@babel/plugin-proposal-class-properties'],
+        ['import', {
+          libraryName: 'antd',
+          libraryDirectory: 'es',
+          style: true
+        }]
       ]
     },
   });
